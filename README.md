@@ -1,0 +1,1 @@
+# Base Django Rest Framework Project Setup
