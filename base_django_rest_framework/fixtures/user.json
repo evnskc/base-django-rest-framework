@@ -1,0 +1,28 @@
+[
+  {
+    "model": "base_django_rest_framework.User",
+    "pk": "087031a8-68df-4ac3-86e4-3dbdad340eec",
+    "fields": {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "username": "jane.doe",
+      "email": "jane.doe@example.com",
+      "password": "pbkdf2_sha256$600000$gnMLwFgPKOHZ7Ci6pefXJ5$WLtveBUTWYSBgxFaXZDiXgGn9aF82T4NC8KV31dZmrg=",
+      "created_at": "1970-01-01 00:00:00 +00:00",
+      "updated_at": "1970-01-01 00:00:00 +00:00"
+    }
+  },
+  {
+    "model": "base_django_rest_framework.User",
+    "pk": "8fc981df-65c9-4ff6-89a6-00a12f7f066a",
+    "fields": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "username": "john.doe",
+      "email": "john.doe@example.com",
+      "password": "pbkdf2_sha256$600000$3wVmgxcTNdUR53ldjEW8Zh$mh3jCE6sfND3nu7djVvvhMZ4JKY4YMA98ez4R0tFZek=",
+      "created_at": "1970-01-01 00:00:00 +00:00",
+      "updated_at": "1970-01-01 00:00:00 +00:00"
+    }
+  }
+]

@@ -1,0 +1,12 @@
+{{ action }}
+
+Hello {{ user }},
+
+Copy and paste the following link in your browser to {{ action|lower }}.
+
+{{ action_link }}
+
+You received this email because we received a request to {{ action|lower }}. If you didn't make this request, you can safely delete this email.
+
+Cheers,
+Base Django Rest Framework

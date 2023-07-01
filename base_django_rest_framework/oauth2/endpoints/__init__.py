@@ -1,0 +1,1 @@
+from .revocation import RevocationEndpoint
