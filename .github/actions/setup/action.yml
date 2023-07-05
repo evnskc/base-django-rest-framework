@@ -1,0 +1,27 @@
+name: Set up python and poetry
+description: Composite action to set up python and poetry
+
+inputs:
+  python-version:
+    description: Python version to use
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set up poetry
+      shell: bash
+      run: pipx install poetry
+
+    - name: Set up python
+      id: setup-python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: poetry
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        poetry env use ${{ steps.setup-python.outputs.python-version }}
+        poetry install

@@ -1,0 +1,48 @@
+# import sentry_sdk
+
+SECRET_KEY = "django-insecure-i#)9tub*-###0+iv5=flf*txaifumy9bl%4c*@c13&+3w8f0+e"
+
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "base-django-rest-framework-db",
+        "HOST": "localhost",
+        "PORT": 5432,
+        "USER": "postgres",
+        "PASSWORD": "postgres"
+    }
+}
+
+# DEFAULT_FROM_EMAIL = "Base Django Rest Framework <mail@example.com>"
+
+# EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = ""
+# EMAIL_HOST_PASSWORD = ""
+# EMAIL_USE_TLS = True
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#         "LOCATION": "redis://localhost:6379",
+#     }
+# }
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+# SESSION_COOKIE_SECURE = True
+
+# CSRF_COOKIE_SECURE = True
+
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7 * 52
+# SECURE_SSL_REDIRECT = True
+
+# sentry_sdk.init(
+#     dsn="",
+#     traces_sample_rate=1.0
+# )

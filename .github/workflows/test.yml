@@ -1,0 +1,44 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: Test
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: base-django-rest-framework-db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@v3
+
+      - name: Set up python and poetry
+        uses: ./.github/actions/setup
+        with:
+          python-version: "3.11"
+
+      - name: Run tests
+        run: |
+          cp ./example/local_settings.py.example ./example/local_settings.py
+          poetry run python manage.py test

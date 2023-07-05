@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "base-django-rest-framework"
-version = "0.1.0"
+version = "1.0.0"
 description = "Base Django Rest Framework Project Setup"
 license = "GPL-3.0-or-later"
 authors = ["Evans <evans@fundi.dev>"]
@@ -8,12 +8,19 @@ readme = "README.md"
 homepage = "https://github.com/evnskc/base-django-rest-framework"
 repository = "https://github.com/evnskc/base-django-rest-framework"
 documentation = "https://github.com/evnskc/base-django-rest-framework"
-keywords = ["Base", "Django", "Django Rest Framework"]
+keywords = ["base", "django", "django rest framework"]
 packages = [{ include = "base_django_rest_framework" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-
+django = "^4.2.3"
+psycopg = "^3.1.9"
+redis = "^4.6.0"
+hiredis = "^2.2.3"
+pillow = "^10.0.0"
+djangorestframework = "^3.14.0"
+authlib = "^1.2.1"
+sentry-sdk = { extras = ["django"], version = "^1.27.0" }
 
 [build-system]
 requires = ["poetry-core"]

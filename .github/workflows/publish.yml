@@ -1,0 +1,29 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: Publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@v3
+
+      - name: Set up python and poetry
+        uses: ./.github/actions/setup
+        with:
+          python-version: "3.11"
+
+      - name: Build
+        run: poetry build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
