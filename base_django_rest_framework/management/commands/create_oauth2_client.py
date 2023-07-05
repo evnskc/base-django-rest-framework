@@ -4,7 +4,7 @@ from base_django_rest_framework.models import OAuth2Client
 
 
 class Command(BaseCommand):
-    help = "Used to create an oAuth2 client"
+    help = "Create an oAuth2 client"
     requires_migrations_checks = True
 
     def add_arguments(self, parser):

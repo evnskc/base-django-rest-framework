@@ -1,9 +1,9 @@
 [
   {
     "model": "base_django_rest_framework.OAuth2Client",
-    "pk": "fb2c74b4-b3c6-48ff-9e47-e4224d5582b9",
     "fields": {
-      "client_id": "e9wVe6CAcLki3MC4913AlPDwgkvOiOV8PGGfYOtGP64qW9MI",
+      "id": "fb2c74b4-b3c6-48ff-9e47-e4224d5582b9",
+      "client_id": "lrPObmNdldFFnoo4nHBxfZbdNprGnnbxl0e9U94UikNAm97p",
       "client_name": "OAuth2 Client",
       "grant_type": "password refresh_token",
       "token_endpoint_auth_method": "none",

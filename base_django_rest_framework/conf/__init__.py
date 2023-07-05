@@ -2,8 +2,6 @@ from base_django_rest_framework.utils import token_generator
 
 AUTH_USER_MODEL = "base_django_rest_framework.User"
 
-INCLUDE_USERNAME_COLUMN = True
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "base_django_rest_framework.authentication.OAuth2Authentication"

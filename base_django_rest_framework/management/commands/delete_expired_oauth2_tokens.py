@@ -4,7 +4,7 @@ from base_django_rest_framework.models import OAuth2Token
 
 
 class Command(BaseCommand):
-    help = "Used to delete expired oAuth2 tokens"
+    help = "Delete expired oAuth2 tokens"
     requires_migrations_checks = True
 
     def handle(self, *args, **options):

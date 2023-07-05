@@ -12,9 +12,9 @@ class TestCase(APITestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = get_user_model().objects.first()
-        cls.oauth2_client = OAuth2Client.objects.first()
-        cls.oauth2_token = getattr(cls, "user").tokens.filter(revoked=False, is_expired_=False).first()
+        cls.user = get_user_model().objects.get(username="jane.doe")
+        cls.oauth2_client = OAuth2Client.objects.get()
+        cls.oauth2_token = getattr(cls, "user").tokens.filter(revoked=False, is_expired_=False).get()
 
     def setUpAuthentication(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"{self.oauth2_token.token_type} {self.oauth2_token.access_token}")
@@ -60,14 +60,14 @@ class TestCase(APITestCase):
     def _test_create(self, data, check_authentication=True, check_verification=True, check_permissions=True,
                      permissions=("add",), **kwargs):
         if check_authentication:
-            self.assertUnAuthorized(self.client.post(getattr(self, "list_url"), data, **kwargs))
+            self.assertUnAuthorized(self.client.post(getattr(self, "list_url"), **kwargs))
             self.setUpAuthentication()
         if check_verification:
-            self.assertForbidden(self.client.post(getattr(self, "list_url"), data, **kwargs))
+            self.assertForbidden(self.client.post(getattr(self, "list_url"), **kwargs))
             self.setUpVerification()
         if check_permissions:
             for permission in permissions:
-                self.assertForbidden(self.client.post(getattr(self, "list_url"), data, **kwargs))
+                self.assertForbidden(self.client.post(getattr(self, "list_url"), **kwargs))
                 getattr(self, "setUpPermission")(permission)
 
         response = self.client.post(getattr(self, "list_url"), data, **kwargs)
@@ -121,7 +121,7 @@ class TestCase(APITestCase):
                 self.assertForbidden(self.client.patch(getattr(self, "detail_url"), **kwargs))
                 getattr(self, "setUpPermission")(permission)
 
-        response = self.client.put(getattr(self, "detail_url"), data, **kwargs)
+        response = self.client.patch(getattr(self, "detail_url"), data, **kwargs)
         self.assertOk(response)
         return response.json()
 
