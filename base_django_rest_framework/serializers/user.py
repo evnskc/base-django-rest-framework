@@ -1,10 +1,9 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
 
 from .model import ModelSerializer
 
-_user_fields = [
+_fields = [
     "id",
     "avatar",
     "first_name",
@@ -20,7 +19,7 @@ _user_fields = [
     "updated_at"
 ]
 
-_user_readonly_fields = [
+_readonly_fields = [
     "id",
     "is_verified",
     "is_active",
@@ -34,12 +33,6 @@ _write_only_fields = ["password"]
 
 
 class UserSerializer(ModelSerializer):
-
-    def __init__(self, *args, fields=None, **kwargs):
-        super().__init__(*args, fields=fields, **kwargs)
-        if not settings.INCLUDE_USERNAME_COLUMN:
-            self.fields.pop("username")
-
     def validate_password(self, value):
         user = self.instance
         if user is None:
@@ -49,32 +42,31 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = _user_fields
-        read_only_fields = _user_readonly_fields
+        fields = _fields
+        read_only_fields = _readonly_fields
         extra_kwargs = {
             "password": {"write_only": True}
         }
 
 
 class UserUpdateSerializer(UserSerializer):
-
     def __init__(self, *args, fields=None, **kwargs):
         super().__init__(*args, fields=fields, **kwargs)
         self.fields.pop("password")
 
     class Meta(UserSerializer.Meta):
-        read_only_fields = [*_user_readonly_fields, "email"]
+        read_only_fields = [*_readonly_fields, "email"]
 
 
 class UserUpdateActiveStatusSerializer(UserUpdateSerializer):
     class Meta(UserUpdateSerializer.Meta):
-        read_only_fields = [field for field in _user_fields if field not in [*_write_only_fields, "is_active"]]
+        read_only_fields = [field for field in _fields if field not in [*_write_only_fields, "is_active"]]
 
 
 class UserUpdateAdminStatusSerializer(UserUpdateSerializer):
     class Meta(UserUpdateSerializer.Meta):
         read_only_fields = [
-            field for field in _user_fields if field not in [*_write_only_fields, "is_staff", "is_superuser"]
+            field for field in _fields if field not in [*_write_only_fields, "is_staff", "is_superuser"]
         ]
 
 

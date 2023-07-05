@@ -12,7 +12,9 @@ class OAuth2TokenViewSet(GenericViewSet, ListModelMixin, CreateModelMixin):
     serializer_class = OAuth2TokenSerializer
 
     def get_queryset(self):
-        return self.request.user.tokens.all()
+        if self.request.user:
+            return self.request.user.tokens.all()
+        return super().get_queryset()
 
     def create(self, request, *args, **kwargs):
         return server.create_token_response(request)
@@ -23,14 +25,19 @@ class OAuth2TokenViewSet(GenericViewSet, ListModelMixin, CreateModelMixin):
 
     def get_throttles(self):
         throttles = super().get_throttles()
+
         if self.action == self.create.__name__:
             throttles.extend([throttle() for throttle in [CreateOAuth2TokenRateThrottle]])
+
         return throttles
 
     def get_permissions(self):
         permissions = super().get_permissions()
+
         if self.action == self.create.__name__:
             permissions.extend([permission() for permission in [~IsAuthenticated]])
+
         if self.action in (self.list.__name__, self.revoke.__name__):
             permissions.extend([permission() for permission in [IsAuthenticated]])
+
         return permissions

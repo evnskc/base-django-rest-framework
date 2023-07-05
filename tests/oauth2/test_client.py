@@ -9,13 +9,37 @@ from .. import TestCase
 
 
 class OAuth2ClientTest(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.list_url = reverse("base_django_rest_framework:oAuth2:clients:oAuth2Client-list")
+        cls.create_data = {
+            "client_name": "client_name",
+            "redirect_uris": "redirect_uris",
+            "default_redirect_uri": "default_redirect_uri",
+            "scope": "scope",
+            "response_type": "response_type",
+            "grant_type": "password refresh_token",
+            "token_endpoint_auth_method": "none"
+        }
+
+        cls.update_data = {
+            "client_name": f"{getattr(cls, 'oauth2_client').client_name} Update",
+            "redirect_uris": "redirect_uris_update",
+            "default_redirect_uri": "default_redirect_uri_update",
+            "scope": "scope_update",
+            "response_type": "response_type_update",
+            "grant_type": "client_credentials",
+            "token_endpoint_auth_method": "client_secret_basic"
+        }
+
+        cls.partial_update_data = {
+            "client_name": f"{getattr(cls, 'oauth2_client').client_name} Update"
+        }
+
+        cls.list_url = reverse("base_django_rest_framework:oAuth2:clients:client-list")
+
         cls.detail_url = reverse(
-            "base_django_rest_framework:oAuth2:clients:oAuth2Client-detail",
+            "base_django_rest_framework:oAuth2:clients:client-detail",
             kwargs={OAuth2ClientViewSet.lookup_url_kwarg: getattr(cls, "oauth2_client").id}
         )
 
@@ -27,41 +51,24 @@ class OAuth2ClientTest(TestCase):
         self.assertURLEqual(self.detail_url, f"/oauth2/clients/{self.oauth2_client.id}/")
 
     def test_list(self):
-        data = self._test_list()
-        clients = data["results"]
-        self.assertEqual(data["count"], 1)
+        response_data = self._test_list()
+        clients = response_data["results"]
+        self.assertEqual(response_data["count"], 1)
         for client in clients:
             self.check_client(client)
 
     def test_create(self):
-        data = self._test_create({
-            "client_name": "OAuth2Client",
-            "redirect_uris": "redirect_uris",
-            "default_redirect_uri": "default_redirect_uri",
-            "scope": "scope",
-            "response_type": "response_type",
-            "grant_type": "password refresh_token",
-            "token_endpoint_auth_method": "none"
-        })
-        self.check_client(data)
-        self.assertTrue(OAuth2Client.objects.filter(**data).exists())
+        response_data = self._test_create(self.create_data)
+        self.check_client(response_data)
+        self.assertTrue(OAuth2Client.objects.filter(**response_data).exists())
 
     def test_retrieve(self):
-        data = self._test_retrieve()
-        self.check_client(data)
+        response_data = self._test_retrieve()
+        self.check_client(response_data)
 
     def test_update(self):
-        update_data = {
-            "client_name": f"{self.oauth2_client.client_name} Update",
-            "redirect_uris": "redirect_uris",
-            "default_redirect_uri": "default_redirect_uri",
-            "scope": "scope",
-            "response_type": "response_type",
-            "grant_type": "client_credentials",
-            "token_endpoint_auth_method": "client_secret_basic"
-        }
-        data = self._test_update(update_data)
-        self.check_client(data)
+        response_data = self._test_update(self.update_data)
+        self.check_client(response_data)
         self.oauth2_client.refresh_from_db()
         self.assertDictEqual({
             "client_name": self.oauth2_client.client_name,
@@ -71,14 +78,13 @@ class OAuth2ClientTest(TestCase):
             "response_type": self.oauth2_client.response_type,
             "grant_type": self.oauth2_client.grant_type,
             "token_endpoint_auth_method": self.oauth2_client.token_endpoint_auth_method
-        }, update_data)
+        }, self.update_data)
 
     def test_partial_update(self):
-        update_data = {"client_name": f"{self.oauth2_client.client_name} Update"}
-        data = self._test_partial_update(update_data)
-        self.check_client(data)
+        response_data = self._test_partial_update(self.partial_update_data)
+        self.check_client(response_data)
         self.oauth2_client.refresh_from_db()
-        self.assertDictEqual({"client_name": self.oauth2_client.client_name}, update_data)
+        self.assertDictEqual({"client_name": self.oauth2_client.client_name}, self.partial_update_data)
 
     def test_destroy(self):
         self._test_destroy()

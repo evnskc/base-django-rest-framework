@@ -1,8 +1,8 @@
 [
   {
     "model": "base_django_rest_framework.User",
-    "pk": "087031a8-68df-4ac3-86e4-3dbdad340eec",
     "fields": {
+      "id": "087031a8-68df-4ac3-86e4-3dbdad340eec",
       "first_name": "Jane",
       "last_name": "Doe",
       "username": "jane.doe",
@@ -14,8 +14,8 @@
   },
   {
     "model": "base_django_rest_framework.User",
-    "pk": "8fc981df-65c9-4ff6-89a6-00a12f7f066a",
     "fields": {
+      "id": "8fc981df-65c9-4ff6-89a6-00a12f7f066a",
       "first_name": "John",
       "last_name": "Doe",
       "username": "john.doe",

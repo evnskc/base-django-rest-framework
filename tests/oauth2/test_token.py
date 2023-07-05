@@ -8,12 +8,29 @@ from .. import TestCase
 
 
 class OAuth2TokenTest(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.list_url = reverse("base_django_rest_framework:oAuth2:tokens:oAuth2Token-list")
-        cls.revoke_url = reverse("base_django_rest_framework:oAuth2:tokens:oAuth2Token-revoke")
+        cls.create_data = {
+            "client_id": getattr(cls, "oauth2_client").client_id,
+            "grant_type": "password",
+            "username": getattr(cls, "user").get_username(),
+            "password": "password"
+        }
+
+        cls.create_data2 = {
+            "client_id": getattr(cls, "oauth2_client").client_id,
+            "grant_type": "refresh_token",
+            "refresh_token": getattr(cls, "oauth2_token").refresh_token
+        }
+
+        cls.revoke_data = {
+            "client_id": getattr(cls, "oauth2_client").client_id,
+        }
+
+        cls.list_url = reverse("base_django_rest_framework:oAuth2:tokens:token-list")
+
+        cls.revoke_url = reverse("base_django_rest_framework:oAuth2:tokens:token-revoke")
 
     def test_urls(self):
         self.assertURLEqual(self.list_url, "/oauth2/tokens/")
@@ -27,26 +44,16 @@ class OAuth2TokenTest(TestCase):
             self.check_token(token)
 
     def test_create(self):
-        self._test_create({
-            "client_id": self.oauth2_client.client_id,
-            "grant_type": "password",
-            "username": self.user.get_username(),
-            "password": "password"
-        })
-
-        self._test_create({
-            "client_id": self.oauth2_client.client_id,
-            "grant_type": "refresh_token",
-            "refresh_token": self.oauth2_token.refresh_token,
-        })
+        self._test_create(self.create_data, secure=True)
+        self._test_create(self.create_data2, secure=True)
         self.assertFalse(OAuth2Token.objects.filter(id=self.oauth2_token.id).exists())
 
-    def test_revoke_using_access_token(self):
-        self._test_revoke(self.oauth2_token.access_token)
+    def test_revoke_access_token(self):
+        self._test_revoke(self.oauth2_token.access_token, secure=True)
         self.assertFalse(OAuth2Token.objects.filter(id=self.oauth2_token.id).exists())
 
-    def test_revoke_using_refresh_token(self):
-        self._test_revoke(self.oauth2_token.refresh_token)
+    def test_revoke_refresh_token(self):
+        self._test_revoke(self.oauth2_token.refresh_token, secure=True)
         self.assertFalse(OAuth2Token.objects.filter(id=self.oauth2_token.id).exists())
 
     def test_delete_revoked_tokens(self):
@@ -61,11 +68,11 @@ class OAuth2TokenTest(TestCase):
 
     def _test_create(self, data, **kwargs):
         self.setUpAuthentication()
-        self.assertForbidden(self.client.post(self.list_url, secure=True))
+        self.assertForbidden(self.client.post(self.list_url, **kwargs))
 
         self.client.logout()
 
-        response = self.client.post(self.list_url, data, format="multipart", secure=True)
+        response = self.client.post(self.list_url, data, format="multipart", **kwargs)
 
         self.assertOk(response)
 
@@ -78,14 +85,13 @@ class OAuth2TokenTest(TestCase):
             **token, **{"client": self.oauth2_client.client_id, "user": self.user}
         ).exists())
 
-    def _test_revoke(self, token):
-        self.assertUnAuthorized(self.client.post(self.revoke_url))
+    def _test_revoke(self, token, **kwargs):
+        self.revoke_data["token"] = token
+
+        self.assertUnAuthorized(self.client.post(self.revoke_url, **kwargs))
         self.setUpAuthentication()
 
-        response = self.client.post(self.revoke_url, {
-            "client_id": self.oauth2_client.client_id,
-            "token": token
-        }, format="multipart", secure=True)
+        response = self.client.post(self.revoke_url, self.revoke_data, format="multipart", **kwargs)
         self.assertOk(response)
         self.assertJSONEqual(response.content, {})
 

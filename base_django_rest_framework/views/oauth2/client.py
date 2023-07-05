@@ -11,5 +11,5 @@ class OAuth2ClientViewSet(ModelViewSet):
     queryset = OAuth2Client.objects.all()
     serializer_class = OAuth2ClientSerializer
     lookup_field = "id"
-    lookup_url_kwarg = "oAuth2Client"
+    lookup_url_kwarg = "client"
     lookup_url_converter = "uuid"

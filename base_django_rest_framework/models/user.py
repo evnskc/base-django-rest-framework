@@ -17,13 +17,7 @@ class User(UUIDMixin, CreatedAtMixin, UpdatedAtMixin, AbstractUser):
     is_verified = models.BooleanField(default=False)
     date_joined = None
 
-    REQUIRED_FIELDS = ["first_name", "last_name"]
-
-    if settings.INCLUDE_USERNAME_COLUMN:
-        REQUIRED_FIELDS.insert(0, "email")
-    else:
-        username = None
-        USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["email", "first_name", "last_name"]
 
     objects = UserManager()
 
@@ -35,6 +29,10 @@ class User(UUIDMixin, CreatedAtMixin, UpdatedAtMixin, AbstractUser):
 
     def verify(self, is_verified):
         self.is_verified = is_verified
+        self.save()
+
+    def update_email(self, email):
+        self.email = email
         self.save()
 
     def update_password(self, password):
